@@ -37,7 +37,7 @@ class MLPConfig(BaseModelConfig):
     @property
     def log_dir(self) -> str:
         current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-        return os.path.join(Config().project_root, 'logs', self.name, current_time)
+        return os.path.join(Config().project_root, 'logs', self.name(), current_time)
 
     @property
     def save_path(self) -> str:
