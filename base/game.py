@@ -1,9 +1,12 @@
+from functools import partial
 from typing import List, Optional
 
+from ai.model_configs.mlp_config import MLPConfig
 from base.cards.deck import Deck
 from base.constants import Constants
 from base.enums.game_phase import GamePhase
 from base.game_state import GameState
+from base.players.ai_player import AIPlayer
 from base.players.human_player import HumanPlayer
 from base.players.player import Player
 from base.players.random_player import RandomPlayer
@@ -72,7 +75,7 @@ class Game:
     def _initialize_players(self) -> None:
         type_to_cls = {
             "random": RandomPlayer,
-            # "ai": AIPlayer,
+            "ai": partial(AIPlayer, config=MLPConfig()),
             "human": HumanPlayer
         }
         self.player = type_to_cls.get(Constants.PLAYER_TYPE)()

@@ -18,15 +18,15 @@ class MLPConfig(BaseModelConfig):
         self.num_actions = ActionService().num_actions
         # Training params
         self.gamma = 0.99
-        self.copy_step = 64
+        self.copy_step = 128
         self.print_exp_step = 100000000
         self.max_experiences = 1000
-        self.min_experiences = 32
-        self.batch_size = 16
+        self.min_experiences = 64
+        self.batch_size = 32
         self.lr = 1e-2
-        self.number_iterations = 500
+        self.number_iterations = 10000
         self.epsilon = 0.99
-        self.decay = 0.995  # This decay makes it so that after 1000 iterations epsilon is 50%
+        self.decay = 0.99985  # This decay makes it so that after 1000 iterations epsilon is 50%
         self.min_epsilon = 0.05
         self.avg_rewards = 0
 

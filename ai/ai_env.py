@@ -72,7 +72,10 @@ class BlackjackEnv(Env):
         # Note that at this point the 'current player' is not the player who took the last action,
         # since _take_action() already swapped the current player.
         if self.game.is_finished():
-            reward += Constants.rewards.get(self.game.player.score)
+            game_reward = Constants.rewards.get(self.game.player.score)
+            if game_reward is None:
+                game_reward = 0 if self.game.player.score < 21 else -100
+            reward += game_reward
         observation = self._get_state()
         return observation, reward, self.game.is_finished(), {}
 
@@ -82,8 +85,6 @@ class BlackjackEnv(Env):
     def _take_action(self, action: Action, action_idx: int):
         self.action_episode_memory[self.curr_episode].append(action_idx)
         self.game.play_action(action)
-        if self.game.board.phase == GamePhase.END_TURN_PHASE:
-            self.game.switch_player_turns()
 
     def reset(self):
         """
@@ -101,7 +102,7 @@ class BlackjackEnv(Env):
         return self._get_state()
 
     def _get_state(self) -> np.array:
-        return np.array(self.game.get_state().create_numeral_representation(self.game.current_player), dtype=np.float32)
+        return np.array(self.game.get_state().create_numeral_representation(self.game.player), dtype=np.float32)
 
     def render(self, mode='human'):
         pass

@@ -18,7 +18,7 @@ class RequestCardAction(Action):
         return None
 
     def get_reward(self) -> Number:
-        return 0
+        return 1
 
     def validate(self, player: 'Player', deck: 'Deck', phase: 'GamePhase', verbose: bool = False):
         if phase != GamePhase.PLAYER_PHASE:
