@@ -12,7 +12,6 @@ if TYPE_CHECKING:
 
 class RequestCardAction(Action):
     """ Request a card from the dealer. """
-
     def _key(self):
         """Return a tuple of all fields that should be checked in equality and hashing operations."""
         return None

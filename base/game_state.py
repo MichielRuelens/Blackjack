@@ -30,7 +30,6 @@ class GameState:
         This representation only contains information that is accessible to the specified player.
         """
         representation = []
-        representation.extend(self._deck_num_cards_representation())
         representation.extend(self._hand_representation(player=player))
         representation.extend(self._score_representation(player=player))
         if as_array:
@@ -41,9 +40,10 @@ class GameState:
     def _hand_representation(player: 'Player'):
         return list(CardEncoder().encode(player.hand.get_raw_cards()))
 
-    def _deck_num_cards_representation(self):
-        return [self.deck.num_cards()]
-
     @staticmethod
     def _score_representation(player: 'Player'):
         return [player.score]
+
+    @staticmethod
+    def _diff_representation(player: 'Player'):
+        return [abs(21 - player.score)]

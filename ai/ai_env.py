@@ -16,8 +16,9 @@ class BlackjackEnv(Env):
     An implementation of the OpenAI environment class for the Blackjack game.
     """
 
-    def __init__(self, num_actions, state_size):
+    def __init__(self, num_actions, state_size, penalty):
         self.__version__ = "0.1.0"
+        self.penalty = penalty
         logging.info("Blackjack - Version {}".format(self.__version__))
 
         # Game variables
@@ -65,18 +66,16 @@ class BlackjackEnv(Env):
         if self.game.is_finished():
             raise RuntimeError("Episode is done, please reset the game.")
         action = ActionService().idx_to_action(action_idx)  # type: Action
+        pre_action_score = self.game.player.score
         self.curr_step += 1
         self._take_action(action, action_idx)
-        reward = action.get_reward()
-        # If the game is over and the last player who played a card is the winner, add a winning bonus to the reward
-        # Note that at this point the 'current player' is not the player who took the last action,
-        # since _take_action() already swapped the current player.
-        if self.game.is_finished():
-            game_reward = Constants.rewards.get(self.game.player.score)
-            if game_reward is None:
-                game_reward = 0 if self.game.player.score < 21 else -100
-            reward += game_reward
+        if self.game.player.broken:
+            reward = self.penalty
+        else:
+            score = self.game.player.score
+            reward = int((score**2 / (abs(score-21) + 1)))
         observation = self._get_state()
+        # print(f"{pre_action_score} => {self.game.player.score} through {action} with reward {reward}")
         return observation, reward, self.game.is_finished(), {}
 
     def get_current_actions_mask(self):

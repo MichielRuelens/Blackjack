@@ -82,7 +82,6 @@ def play_game(env, train_net, target_net, epsilon, copy_step, print_exp_step):
         state, reward, done, _ = env.step(action)
         rewards += reward
         if done:
-            reward = -10
             env.reset()
 
         exp = {'s': prev_state, 'a': action, 'r': reward, 'm': actions_mask, 's2': state, 'done': done}
@@ -98,7 +97,7 @@ def play_game(env, train_net, target_net, epsilon, copy_step, print_exp_step):
     return rewards
 
 
-def main():
+def main(penalty):
     cfg = MLPConfig()
     # ============ CONFIG PARAMETERS =============== #
     gamma = cfg.gamma
@@ -115,7 +114,7 @@ def main():
     min_epsilon = cfg.min_epsilon
     avg_rewards = cfg.avg_rewards
     # =============================================== #
-    env = BlackjackEnv(cfg.num_actions, cfg.num_states)
+    env = BlackjackEnv(cfg.num_actions, cfg.num_states, penalty)
     summary_writer = tf.summary.create_file_writer(cfg.log_dir)
     train_net = DQN(cfg, gamma, max_experiences, min_experiences, batch_size, lr)
     target_net = DQN(cfg, gamma, max_experiences, min_experiences, batch_size, lr)

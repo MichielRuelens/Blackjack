@@ -37,6 +37,8 @@ class Player(metaclass=ABCMeta):
 
     def reset(self):
         self.hand = Hand()
+        self.stopped = False
+        self.broken = False
 
     def play_single_step(self, game_state: 'GameState', verbose: bool = False) -> GamePhase:
         """

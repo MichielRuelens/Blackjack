@@ -16,16 +16,18 @@ def get_winner(g):
 if __name__ == '__main__':
     game_runner = GameRunner()
 
-    winners = defaultdict(int)
-    score_deltas = []
+    num_broken = 0
+    num_games = 100
+    scores = []
     game_id, game = game_runner.start_game()
-    for i in range(100):
+    for i in range(num_games):
         print("Playing game {}".format(i + 1))
         while not game.is_finished():
             game.play_single_step()
-        winner, delta = get_winner(game)
-        winners[winner.identifier] += 1
-        score_deltas.append(delta)
+        if game.player.broken:
+            num_broken += 1
+        else:
+            scores.append(game.player.score)
         game.reset_game(keep_players=True)
-    print("Winners: {}".format(winners))
-    print("With an average delta of {}".format(mean(score_deltas)))
+    print(f"Break Percent: {int((num_broken*100)/num_games)}%")
+    print(f"Average score: {mean(scores)}")
